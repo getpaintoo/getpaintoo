@@ -1,18 +1,28 @@
-<h2 align="left">getpaintoo</h2>
-
-<p align="left">Backend, web и DevOps. Пишу на Java и JavaScript, работаю с PostgreSQL, разбираюсь в инфраструктуре.</p>
-
-### Стек
-
-<p align="left">
-  <img src="https://skillicons.dev/icons?i=java,js,ts,react,nestjs,nodejs,html,css,postgres,prisma,docker,nginx,linux,git&perline=14" alt="stack" />
+<p align="center">
+  <img src="assets/header.svg" width="100%" alt="getpaintoo" />
 </p>
 
-### Проекты
--
-### Статистика
-
-<p align="left">
-  <img height="165" src="https://github-readme-stats.vercel.app/api?username=getpaintoo&show_icons=true&hide_border=true&include_all_commits=true&count_private=true&theme=github_dark&bg_color=00000000" alt="stats" />
-  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=getpaintoo&layout=compact&hide_border=true&langs_count=6&theme=github_dark&bg_color=00000000" alt="top langs" />
+<p align="center">
+  <img src="assets/about.svg" width="100%" alt="about" />
 </p>
+
+<img src="assets/stack.svg" width="100%" alt="stack" />
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=java,js,ts,nodejs,nestjs,react,postgres,prisma,docker,nginx,linux,git,html,css&perline=7&theme=dark" alt="tech stack" />
+</p>
+
+<img src="assets/stats.svg" width="100%" alt="stats" />
+
+<p align="center">
+  <img height="165" src="https://github-readme-stats.vercel.app/api?username=getpaintoo&show_icons=true&include_all_commits=true&hide_title=true&border_radius=8&bg_color=0b0b0e&border_color=2a2a33&title_color=ff4b4b&text_color=c9c9d1&icon_color=e0262d&ring_color=e0262d" alt="stats" />
+  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=getpaintoo&layout=compact&langs_count=6&hide_title=true&border_radius=8&bg_color=0b0b0e&border_color=2a2a33&title_color=ff4b4b&text_color=c9c9d1" alt="languages" />
+</p>
+
+<img src="assets/activity.svg" width="100%" alt="activity" />
+
+<p align="center">
+  <img src="profile-3d-contrib/profile-customize.svg" width="100%" alt="3d contributions" />
+</p>
+
+<img src="assets/footer.svg" width="100%" alt="eof" />
