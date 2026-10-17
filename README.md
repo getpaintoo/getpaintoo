@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.pinimg.com/originals/3c/b1/21/3cb121100344af53350cd5d484218b6d.jpg" width="100%" alt="cover" />
+  <img src="assets/v3/hero.svg" width="100%" alt="LSD" />
 </p>
 
 <p align="center">
