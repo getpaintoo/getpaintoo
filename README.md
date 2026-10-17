@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/v3/banner2.svg" width="100%" alt="getpaintoo" />
+  <img src="assets/v3/banner3.svg" width="100%" alt="getpaintoo" />
 </p>
 
 <p align="center">
