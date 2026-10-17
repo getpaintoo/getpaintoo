@@ -22,7 +22,7 @@
 <img src="assets/activity.svg" width="100%" alt="activity" />
 
 <p align="center">
-  <img src="profile-3d-contrib/profile-customize.svg" width="100%" alt="3d contributions" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=getpaintoo&bg_color=0b0b0e&color=8b8b95&title_color=e8e6e3&line=e0262d&point=ff4b4b&area=true&area_color=e0262d&hide_border=true&radius=8&custom_title=contributions" width="100%" alt="activity graph" />
 </p>
 
 <img src="assets/footer.svg" width="100%" alt="eof" />
