@@ -1,26 +1,28 @@
-name: profile-3d-contrib
+name: profile-live
 
 on:
+  schedule:
+    - cron: "17 0 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  render:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: yoshi389111/github-profile-3d-contrib@v0.9.3
+      - name: Render stats
+        run: node scripts/render.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
-          SETTING_JSON: .github/3d-contrib.json
       - name: Commit & Push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add -A .
-          if git commit -m "chore: update 3d contrib"; then
+          git add assets/live
+          if git commit -m "chore: refresh profile stats"; then
             git push
           fi
