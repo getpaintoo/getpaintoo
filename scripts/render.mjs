@@ -66,6 +66,14 @@ const W = 860;
 // goal grows with the value so the ring never overflows
 const goal = (v, base) => { let g = base; while (v >= g) g *= 2; return g; };
 
+// value -> colour: burgundy/red when low, green in the middle, white near the top
+const hex = c => c.match(/\w\w/g).map(h => parseInt(h, 16));
+const mix = (a, b, k) => '#' + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * k).toString(16).padStart(2, '0')).join('');
+const heat = t => { t = Math.max(0, Math.min(1, t));
+  if (t < 0.45) return mix('#4a1416', '#e0262d', t / 0.45);
+  if (t < 0.85) return mix('#1e8a3a', '#52e070', (t - 0.45) / 0.4);
+  return mix('#52e070', '#f2fff5', (t - 0.85) / 0.15); };
+
 // ---------- rings ----------
 function rings(st) {
   const H = 190, sw = 11, SHIFT = 24;
@@ -75,6 +83,7 @@ function rings(st) {
     ["CONTRIBUTIONS", st.contributions, goal(st.contributions, 100), "#2dc04f"],
     ["REPOS", st.repos, goal(st.repos, 5), "#1e8a3a"],
   ];
+  rs.forEach(r => { r[3] = heat(r[1] / r[2]); });
   const radii = [78, 63, 48, 33], outer = 78 + sw / 2;
   const RW = 520; // compact block that sits next to the art
   const legendW = 230, gap = 48, groupW = outer * 2 + gap + legendW, start = (RW - groupW) / 2;
@@ -115,7 +124,7 @@ function contrib3d(days) {
   const gap = 0.12, out = [];
   for (const c of cells) {
     const z = c.n ? 10 + 90 * Math.sqrt(c.n / max) : 2;
-    const col = c.n ? G[Math.min(5, 1 + c.lv)] : empty;
+    const col = c.n ? heat(Math.sqrt(c.n / max)) : empty;
     const w0 = c.w + gap, w1 = c.w + 1 - gap, d0 = c.d + gap, d1 = c.d + 1 - gap;
     const P = (w, d, zz) => pt(w, d, zz).join(',');
     out.push(`<polygon fill="${shade(col, 0.62)}" points="${P(w0, d1, 0)} ${P(w1, d1, 0)} ${P(w1, d1, z)} ${P(w0, d1, z)}"/>`);
@@ -130,7 +139,7 @@ function contrib3d(days) {
   const range = `${mon[f.getUTCMonth()]} ${f.getUTCFullYear()} - ${mon[l.getUTCMonth()]} ${l.getUTCFullYear()}`;
   b.push(ptext(range, W - 28 - tw(range, 1), h - 28, 1, MUTED));
   b.push(ptext("LAST YEAR", 28, 24, 1, MUTED));
-  [empty, G[2], G[3], G[4], G[5]].forEach((c, i) => b.push(`<rect x="${28 + i * 14}" y="${h - 38}" width="10" height="10" fill="${c}"/>`));
+  [empty, heat(0.15), heat(0.4), heat(0.65), heat(1)].forEach((c, i) => b.push(`<rect x="${28 + i * 14}" y="${h - 38}" width="10" height="10" fill="${c}"/>`));
   return svg(W, h, b.join(''), `${total} contributions in the last year`);
 }
 
