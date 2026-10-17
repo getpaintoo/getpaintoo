@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/header.svg?v=2" width="100%" alt="getpaintoo" />
+  <img src="assets/banner.svg" width="100%" alt="getpaintoo" />
 </p>
 
 <img src="assets/stack.svg" width="100%" alt="stack" />
