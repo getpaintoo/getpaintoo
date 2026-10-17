@@ -19,5 +19,5 @@
 </p>
 
 <p align="center">
-  <img src="assets/v3/player.svg" width="100%" alt="now playing" />
+  <img src="assets/v3/player2.svg" width="100%" alt="now playing" />
 </p>
