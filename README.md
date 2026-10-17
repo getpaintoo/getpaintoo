@@ -11,9 +11,9 @@
 </p>
 
 <p align="center">
-  <img src="assets/v3/rings.svg" width="100%" alt="activity rings" />
+  <img src="assets/v3/rings2.svg" width="100%" alt="activity rings" />
 </p>
 
 <p align="center">
-  <img src="assets/v3/contrib3d2.svg" width="100%" alt="3d contributions" />
+  <img src="assets/v3/contrib3d3.svg" width="100%" alt="3d contributions" />
 </p>
