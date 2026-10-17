@@ -2,10 +2,6 @@
   <img src="assets/header.svg" width="100%" alt="getpaintoo" />
 </p>
 
-<p align="center">
-  <img src="assets/about.svg" width="100%" alt="about" />
-</p>
-
 <img src="assets/stack.svg" width="100%" alt="stack" />
 
 <p align="center">
