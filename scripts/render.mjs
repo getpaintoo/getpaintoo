@@ -76,7 +76,8 @@ function rings(st) {
     ["REPOS", st.repos, goal(st.repos, 5), "#1e8a3a"],
   ];
   const radii = [78, 63, 48, 33], outer = 78 + sw / 2;
-  const legendW = 230, gap = 48, groupW = outer * 2 + gap + legendW, start = (W - groupW) / 2;
+  const RW = 520; // compact block that sits next to the art
+  const legendW = 230, gap = 48, groupW = outer * 2 + gap + legendW, start = (RW - groupW) / 2;
   const cx = n2(start + outer - SHIFT), cy = H / 2, lx = n2(start + outer * 2 + gap + SHIFT), lex = lx + legendW;
   const b = [];
   rs.forEach(([, v, g, col], i) => {
@@ -94,7 +95,7 @@ function rings(st) {
     b.push(ptext(pct, lex - tw(pct, 1.5), y, 1.5, col));
     b.push(`<rect x="${lx + 14}" y="${y + 24}" width="${legendW - 14}" height="0.6" fill="#24302a"/>`);
   });
-  return svg(W, H, b.join(''), 'activity rings');
+  return svg(RW, H, b.join(''), 'activity rings');
 }
 
 // ---------- 3D calendar ----------
