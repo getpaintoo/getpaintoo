@@ -9,12 +9,7 @@
 </p>
 
 ### Проекты
-
-- [**gkh-complaint-portal**](https://github.com/getpaintoo/gkh-complaint-portal) — портал жалоб на ЖКХ: React, NestJS, PostgreSQL, Prisma, Nginx, Docker Compose
-- [**db-sec-course**](https://github.com/getpaintoo/db-sec-course) — безопасность баз данных, PL/pgSQL
-- [**server-protection**](https://github.com/getpaintoo/server-protection) — защита сервера и многослойное шифрование данных
-- [**fashion-store-project**](https://github.com/getpaintoo/fashion-store-project) — вёрстка интернет-магазина
-
+-
 ### Статистика
 
 <p align="left">
