@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=java,js,ts,nodejs,nestjs,react,html,css,postgres,prisma,docker,nginx,linux,bash,git,github,vscode,postman,discord,ps,apple&perline=11&theme=dark" alt="tech stack" />
+  <img src="https://skillicons.dev/icons?i=java,js,ts,nodejs,nestjs,react,html,css,postgres,prisma,docker,nginx,linux,bash,git,github,vscode,postman,discord,ps,figma,apple&perline=11&theme=dark" alt="tech stack" />
 </p>
 
 <p align="center">
