@@ -15,5 +15,5 @@
 </p>
 
 <p align="center">
-  <img src="assets/v3/contrib3d.svg" width="100%" alt="3d contributions" />
+  <img src="assets/v3/contrib3d2.svg" width="100%" alt="3d contributions" />
 </p>
