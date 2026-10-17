@@ -54,7 +54,7 @@ function icon(name, cx, cy, px, fill) {
 // ---------- radar ----------
 const goal = (v, base) => { let g = base; while (v >= g) g *= 2; return g; };
 function radar(st) {
-  const W = 860, H = 230, R = 84, legendW = 230, gap = 70;
+  const W = 560, H = 230, R = 84, legendW = 230, gap = 70;
   const groupW = legendW + gap + (R + 34) * 2, start = (W - groupW) / 2;
   const lx = start, cx = n2(start + legendW + gap + R + 34), cy = H / 2 + 4;
   const axes = [
