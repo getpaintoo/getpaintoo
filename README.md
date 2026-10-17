@@ -15,5 +15,9 @@
 </p>
 
 <p align="center">
+  <img src="assets/live/radar.svg" width="100%" alt="activity by type" />
+</p>
+
+<p align="center">
   <img src="assets/live/contrib3d.svg" width="100%" alt="3d contributions" />
 </p>
