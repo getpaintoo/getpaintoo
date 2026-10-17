@@ -17,3 +17,7 @@
 <p align="center">
   <img src="assets/live/contrib3d.svg" width="100%" alt="3d contributions" />
 </p>
+
+<p align="center">
+  <img src="assets/v3/player.svg" width="100%" alt="now playing" />
+</p>
