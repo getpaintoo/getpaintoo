@@ -56,6 +56,11 @@ const heat = t => { t = Math.max(0, Math.min(1, t));
   if (t < 0.45) return mix('#4a1416', '#e0262d', t / 0.45);
   if (t < 0.85) return mix('#1e8a3a', '#52e070', (t - 0.45) / 0.4);
   return mix('#52e070', '#f2fff5', (t - 0.85) / 0.15); };
+// red-only scale for the 3D graph block: burgundy -> red -> light red -> white
+const red = t => { t = Math.max(0, Math.min(1, t));
+  if (t < 0.5) return mix('#4a1416', '#e0262d', t / 0.5);
+  if (t < 0.85) return mix('#e0262d', '#ff7a7a', (t - 0.5) / 0.35);
+  return mix('#ff7a7a', '#fff1f1', (t - 0.85) / 0.15); };
 const shade = (c, k) => '#' + hex(c).map(v => Math.max(0, Math.min(255, Math.round(v * k))).toString(16).padStart(2, '0')).join('');
 // 7x7 pixel icons
 const ICONS = {
@@ -89,7 +94,7 @@ function ringsGroup(ms, cx, cy) {
   const pick = ['commits', 'prs', 'contributions', 'repos'].map(k => ms.find(m => m.k === k));
   const radii = [64, 52, 40, 28], sw = 9, b = [];
   pick.forEach((m, i) => {
-    const r = radii[i], C = n2(2 * Math.PI * r), off = n2(C * (1 - m.t)), col = heat(m.t);
+    const r = radii[i], C = n2(2 * Math.PI * r), off = n2(C * (1 - m.t)), col = red(Math.max(m.t, 0.2));
     b.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-opacity="0.14" stroke-width="${sw}"/>`);
     b.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 ${cx} ${cy})"><animate attributeName="stroke-dashoffset" from="${C}" to="${off}" dur="${1.2 + i * 0.25}s" calcMode="spline" keySplines="0.25 0.1 0.25 1" keyTimes="0;1" fill="freeze"/></circle>`);
   });
@@ -103,7 +108,7 @@ function radarGroup(ms, cx, cy, R) {
   const V = (i, l) => [cx + R * l / L * Math.cos(ang(i)), cy + R * l / L * Math.sin(ang(i))];
   const M = (i, l) => { const a = V(i, l), b = V((i + 1) % N, l); return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; };
   const P = p => p.map(n2).join(',');
-  const RING = ["#ff3b3b", "#f2b84b", "#a3d94a", "#2dc04f"]; // centre -> edge
+  const RING = ["#6b171b", "#a81f25", "#e0262d", "#ff6b6b"]; // centre -> edge
   const b = [];
   ax.forEach((m, i) => {
     const lit = m.v > 0 ? Math.max(1, Math.ceil(m.t * L)) : 0;
@@ -112,7 +117,7 @@ function radarGroup(ms, cx, cy, R) {
       const pts = l === 1
         ? [[cx, cy], M(pm, 1), V(i, 1), M(i, 1)]
         : [M(pm, l - 1), V(i, l - 1), M(i, l - 1), M(i, l), V(i, l), M(pm, l)];
-      b.push(`<polygon points="${pts.map(P).join(' ')}" fill="${l <= lit ? RING[l - 1] : '#1f2723'}" stroke="${BG}" stroke-width="2.5" stroke-linejoin="round"/>`);
+      b.push(`<polygon points="${pts.map(P).join(' ')}" fill="${l <= lit ? RING[l - 1] : '#211c1d'}" stroke="${BG}" stroke-width="2.5" stroke-linejoin="round"/>`);
     }
   });
   return b.join('');
@@ -124,13 +129,13 @@ function contrib3d(st, ms) {
   const total = days.reduce((s, d) => s + d[2], 0), max = Math.max(1, ...days.map(d => d[2]));
   const wv = [12.6, 4.3], dv = [-9, 9], ox = 30 + 7 * 9, oy = 96;
   const pt = (w, d, z) => [n2(ox + w * wv[0] + d * dv[0]), n2(oy + w * wv[1] + d * dv[1] - z)];
-  const empty = "#1c2420";
+  const empty = "#1f1a1b";
   const firstDow = new Date(days[0][0] + 'T00:00:00Z').getUTCDay();
   const cells = days.map((c, i) => { const k = i + firstDow; return { w: Math.floor(k / 7), d: k % 7, n: c[2] }; });
   cells.sort((a, b) => (a.w * wv[1] + a.d * dv[1]) - (b.w * wv[1] + b.d * dv[1]) || a.w - b.w);
   const gap = 0.12, out = [];
   for (const c of cells) {
-    const z = c.n ? 10 + 90 * Math.sqrt(c.n / max) : 2, col = c.n ? heat(Math.sqrt(c.n / max)) : empty;
+    const z = c.n ? 10 + 90 * Math.sqrt(c.n / max) : 2, col = c.n ? red(Math.sqrt(c.n / max)) : empty;
     const w0 = c.w + gap, w1 = c.w + 1 - gap, d0 = c.d + gap, d1 = c.d + 1 - gap, Q = (w, d, zz) => pt(w, d, zz).join(',');
     out.push(`<polygon fill="${shade(col, 0.62)}" points="${Q(w0, d1, 0)} ${Q(w1, d1, 0)} ${Q(w1, d1, z)} ${Q(w0, d1, z)}"/>`);
     out.push(`<polygon fill="${shade(col, 0.42)}" points="${Q(w1, d0, 0)} ${Q(w1, d1, 0)} ${Q(w1, d1, z)} ${Q(w1, d0, z)}"/>`);
@@ -140,30 +145,30 @@ function contrib3d(st, ms) {
   b.push(radarGroup(ms, 735, 128, 94));       // empty corner above the grid
   b.push(ringsGroup(ms, 132, 348));           // empty corner below the grid
   const label = `${total} CONTRIBUTIONS`;
-  b.push(ptext(label, W - 28 - tw(label, 1.5), h - 28 - 7 - 10.5, 1.5, "#e6ede8"));
+  b.push(ptext(label, W - 28 - tw(label, 1.5), h - 28 - 7 - 10.5, 1.5, "#ece6e6"));
   const mon = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   const f = new Date(days[0][0]), l = new Date(days[days.length - 1][0]);
   const range = `${mon[f.getUTCMonth()]} ${f.getUTCFullYear()} - ${mon[l.getUTCMonth()]} ${l.getUTCFullYear()}`;
-  b.push(ptext(range, W - 28 - tw(range, 1), h - 28, 1, "#7f8f86"));
-  b.push(ptext("LAST YEAR", 28, 24, 1, "#7f8f86"));
-  [empty, heat(0.15), heat(0.4), heat(0.65), heat(1)].forEach((c, i) => b.push(`<rect x="${W - 28 - 66 + i * 14}" y="${h - 28 - 7 - 10.5 - 20}" width="10" height="10" fill="${c}"/>`));
+  b.push(ptext(range, W - 28 - tw(range, 1), h - 28, 1, "#8a8283"));
+  b.push(ptext("LAST YEAR", 28, 24, 1, "#8a8283"));
+  [empty, red(0.15), red(0.45), red(0.75), red(1)].forEach((c, i) => b.push(`<rect x="${W - 28 - 66 + i * 14}" y="${h - 28 - 7 - 10.5 - 20}" width="10" height="10" fill="${c}"/>`));
   return svg(W, h, b.join(''), `${total} contributions in the last year`);
 }
 
 // ---------- stats table (left) + art (right) ----------
 function statsBlock(ms) {
   const W = 860, ART_W = 260, ART_H = Math.round(ART_W * 640 / 360);
-  const rowH = 52, tableW = 400, H = ART_H, leftW = W - ART_W;
+  const rowH = 30, tableW = 340, H = ART_H, leftW = W - ART_W;
   const lx = Math.round((leftW - tableW) / 2), ly = Math.round((H - ms.length * rowH) / 2) + 8;
   const b = [];
   ms.forEach((m, i) => {
     const y = ly + i * rowH, col = heat(m.t);
-    b.push(icon(m.k, lx + 6, y + 7, 1.8, "#7f8f86"));
-    b.push(ptext(m.label, lx + 26, y, 2, "#d5ddd8"));
-    b.push(ptext(`${m.v} / ${m.g}`, lx + 26, y + 20, 1.3, "#6f7d75"));
+    b.push(icon(m.k, lx + 4, y + 3.5, 1, "#7f8f86"));
+    b.push(ptext(m.label, lx + 16, y, 1, "#d5ddd8"));
+    b.push(ptext(`${m.v} / ${m.g}`, lx + 16, y + 11, 0.8, "#6f7d75"));
     const pct = `${Math.round(m.t * 100)}%`;
-    b.push(ptext(pct, lx + tableW - tw(pct, 2), y, 2, heat(Math.max(m.t, 0.12))));
-    b.push(`<rect x="${lx + 26}" y="${y + 36}" width="${tableW - 26}" height="0.8" fill="#24302a"/>`);
+    b.push(ptext(pct, lx + tableW - tw(pct, 1), y, 1, heat(Math.max(m.t, 0.12))));
+    b.push(`<rect x="${lx + 16}" y="${y + 21}" width="${tableW - 16}" height="0.6" fill="#24302a"/>`);
   });
   const art = readFileSync('assets/v3/art_s.png').toString('base64');
   b.push(`<image x="${leftW}" y="0" width="${ART_W}" height="${ART_H}" href="data:image/png;base64,${art}"/>`);
