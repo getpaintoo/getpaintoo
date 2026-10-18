@@ -1,5 +1,5 @@
 // Renders the live profile blocks from GitHub stats (runs daily in Actions, Node 20+, no deps):
-//   assets/live/contrib3d.svg  3D calendar with activity rings (bottom-left) and a cell radar (top-right)
+//   assets/live/contrib3d.svg  3D calendar with a cell radar (top-right)
 //   assets/live/stats.svg      one 6-row stats table on the left, art on the right
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 
@@ -49,14 +49,9 @@ function ptext(s, x, y, px, fill) {
 const tw = (s, px) => String(s).length * 6 * px - px;
 const svg = (w, h, body, title) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${title}"><title>${title}</title>${body}</svg>`;
 const goal = (v, base) => { let g = base; while (v >= g) g *= 2; return g; };
-// value -> colour: burgundy/red when low, green in the middle, white near the top
 const hex = c => c.match(/\w\w/g).map(h => parseInt(h, 16));
 const mix = (a, b, k) => '#' + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * k).toString(16).padStart(2, '0')).join('');
-const heat = t => { t = Math.max(0, Math.min(1, t));
-  if (t < 0.45) return mix('#4a1416', '#e0262d', t / 0.45);
-  if (t < 0.85) return mix('#1e8a3a', '#52e070', (t - 0.45) / 0.4);
-  return mix('#52e070', '#f2fff5', (t - 0.85) / 0.15); };
-// red-only scale for the 3D graph block: burgundy -> red -> light red -> white
+// value -> colour (red only): burgundy -> red -> light red -> white
 const red = t => { t = Math.max(0, Math.min(1, t));
   if (t < 0.5) return mix('#4a1416', '#e0262d', t / 0.5);
   if (t < 0.85) return mix('#e0262d', '#ff7a7a', (t - 0.5) / 0.35);
@@ -87,18 +82,6 @@ function metrics(st) {
     { k: 'reviews', label: 'REVIEWS', v: st.reviews, g: goal(st.reviews, 10) },
     { k: 'repos', label: 'REPOS', v: st.repos, g: goal(st.repos, 5) },
   ].map(m => ({ ...m, t: Math.min(1, m.v / m.g) }));
-}
-
-// ---------- activity rings (no legend; colours follow the value) ----------
-function ringsGroup(ms, cx, cy) {
-  const pick = ['commits', 'prs', 'contributions', 'repos'].map(k => ms.find(m => m.k === k));
-  const radii = [64, 52, 40, 28], sw = 9, b = [];
-  pick.forEach((m, i) => {
-    const r = radii[i], C = n2(2 * Math.PI * r), off = n2(C * (1 - m.t)), col = red(Math.max(m.t, 0.2));
-    b.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-opacity="0.14" stroke-width="${sw}"/>`);
-    b.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 ${cx} ${cy})"><animate attributeName="stroke-dashoffset" from="${C}" to="${off}" dur="${1.2 + i * 0.25}s" calcMode="spline" keySplines="0.25 0.1 0.25 1" keyTimes="0;1" fill="freeze"/></circle>`);
-  });
-  return b.join('');
 }
 
 // ---------- cell radar: 5 sectors x 4 rings, whole cells light up ----------
@@ -143,35 +126,34 @@ function contrib3d(st, ms) {
   }
   const b = [out.join('')];
   b.push(radarGroup(ms, 735, 128, 94));       // empty corner above the grid
-  b.push(ringsGroup(ms, 132, 348));           // empty corner below the grid
   const label = `${total} CONTRIBUTIONS`;
-  b.push(ptext(label, W - 28 - tw(label, 1.5), h - 28 - 7 - 10.5, 1.5, "#ece6e6"));
+  b.push(ptext(label, W - 28 - tw(label, 1.5), h - 28 - 7 - 10.5, 1.5, "#e6edf3"));
   const mon = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   const f = new Date(days[0][0]), l = new Date(days[days.length - 1][0]);
   const range = `${mon[f.getUTCMonth()]} ${f.getUTCFullYear()} - ${mon[l.getUTCMonth()]} ${l.getUTCFullYear()}`;
-  b.push(ptext(range, W - 28 - tw(range, 1), h - 28, 1, "#8a8283"));
-  b.push(ptext("LAST YEAR", 28, 24, 1, "#8a8283"));
+  b.push(ptext(range, W - 28 - tw(range, 1), h - 28, 1, "#8b949e"));
+  b.push(ptext("LAST YEAR", 28, 24, 1, "#8b949e"));
   [empty, red(0.15), red(0.45), red(0.75), red(1)].forEach((c, i) => b.push(`<rect x="${W - 28 - 66 + i * 14}" y="${h - 28 - 7 - 10.5 - 20}" width="10" height="10" fill="${c}"/>`));
   return svg(W, h, b.join(''), `${total} contributions in the last year`);
 }
 
 // ---------- stats table (left) + art (right) ----------
 function statsBlock(ms) {
-  const W = 860, ART_W = 260, ART_H = Math.round(ART_W * 640 / 360);
-  const rowH = 30, tableW = 340, H = ART_H, leftW = W - ART_W;
-  const lx = Math.round((leftW - tableW) / 2), ly = Math.round((H - ms.length * rowH) / 2) + 8;
+  const W = 860, ART_W = 240, ART_H = Math.round(ART_W * 640 / 360), H = ART_H;
+  const lx = 40, tableW = 500, rowH = 62, rowContent = 34;
+  const ly = Math.round((H - ((ms.length - 1) * rowH + rowContent)) / 2);
   const b = [];
   ms.forEach((m, i) => {
-    const y = ly + i * rowH, col = heat(m.t);
-    b.push(icon(m.k, lx + 4, y + 3.5, 1, "#7f8f86"));
-    b.push(ptext(m.label, lx + 16, y, 1, "#d5ddd8"));
-    b.push(ptext(`${m.v} / ${m.g}`, lx + 16, y + 11, 0.8, "#6f7d75"));
+    const y = ly + i * rowH;
+    b.push(icon(m.k, lx + 5, y + 5, 1.5, "#6e7681"));
+    b.push(ptext(m.label, lx + 24, y, 1.5, "#e6edf3"));
+    b.push(ptext(`${m.v} / ${m.g}`, lx + 24, y + 17, 1, "#6e7681"));
     const pct = `${Math.round(m.t * 100)}%`;
-    b.push(ptext(pct, lx + tableW - tw(pct, 1), y, 1, heat(Math.max(m.t, 0.12))));
-    b.push(`<rect x="${lx + 16}" y="${y + 21}" width="${tableW - 16}" height="0.6" fill="#24302a"/>`);
+    b.push(ptext(pct, lx + tableW - tw(pct, 1.5), y, 1.5, red(Math.max(m.t, 0.3))));
+    b.push(`<rect x="${lx + 24}" y="${y + rowContent}" width="${tableW - 24}" height="1" fill="#21262d"/>`);
   });
   const art = readFileSync('assets/v3/art_s.png').toString('base64');
-  b.push(`<image x="${leftW}" y="0" width="${ART_W}" height="${ART_H}" href="data:image/png;base64,${art}"/>`);
+  b.push(`<image x="${W - ART_W}" y="0" width="${ART_W}" height="${ART_H}" href="data:image/png;base64,${art}"/>`);
   return svg(W, H, b.join(''), 'stats');
 }
 
