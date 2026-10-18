@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="assets/v3/hero.svg" width="100%" alt="LSD" />
+  <img src="assets/v4/hero2.svg" width="100%" alt="LSD" />
 </p>
 
 <p align="center">
-  <img src="assets/v3/banner3.svg" width="100%" alt="getpaintoo" />
+  <img src="assets/v4/banner4.svg" width="100%" alt="getpaintoo" />
 </p>
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=java,js,ts,nodejs,nestjs,react,html,css,postgres,prisma,docker,nginx,linux,bash,git,github,vscode,postman,discord,ps,figma,apple&perline=11&theme=dark" alt="tech stack" />
+  <img src="assets/v4/icons.svg" width="100%" alt="tech stack" />
 </p>
 
 <p align="center">
@@ -19,5 +19,5 @@
 </p>
 
 <p align="center">
-  <img src="assets/v3/player2.svg" width="100%" alt="now playing" />
+  <img src="assets/v4/player3.svg" width="100%" alt="now playing" />
 </p>
