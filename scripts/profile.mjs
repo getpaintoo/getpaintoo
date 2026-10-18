@@ -150,7 +150,18 @@ function statsBlock(ms) {
     b.push(ptext(`${m.v} / ${m.g}`, lx + 24, y + 17, 1, "#6e7681"));
     const pct = `${Math.round(m.t * 100)}%`;
     b.push(ptext(pct, lx + tableW - tw(pct, 1.5), y, 1.5, red(Math.max(m.t, 0.3))));
-    b.push(`<rect x="${lx + 24}" y="${y + rowContent}" width="${tableW - 24}" height="1" fill="#21262d"/>`);
+    // segmented pixel bar (same cells as the 3D grid): lit cells go dark red -> light, last one blinks
+    const N = 34, pitch = 14, cw = 11, lit = m.v > 0 ? Math.max(1, Math.round(m.t * N)) : 0, by = y + 29;
+    const off = [], on = [];
+    for (let k = 0; k < N; k++) {
+      const x = lx + 24 + k * pitch;
+      if (k >= lit) { off.push(`M${x} ${by}h${cw}v5h-${cw}z`); continue; }
+      const c = red(0.15 + 0.85 * (k + 1) / N);
+      on.push(k === lit - 1
+        ? `<rect x="${x}" y="${by}" width="${cw}" height="5" fill="${c}"><animate attributeName="opacity" values="1;1;0.2;1" keyTimes="0;0.5;0.75;1" dur="${1.6 + i * 0.2}s" repeatCount="indefinite"/></rect>`
+        : `<rect x="${x}" y="${by}" width="${cw}" height="5" fill="${c}"/>`);
+    }
+    b.push(`<path fill="#1f1a1b" d="${off.join('')}"/>` + on.join(''));
   });
   const art = readFileSync('assets/v3/art_s.png').toString('base64');
   b.push(`<image x="${W - ART_W}" y="0" width="${ART_W}" height="${ART_H}" href="data:image/png;base64,${art}"/>`);
