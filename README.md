@@ -19,5 +19,5 @@
 </p>
 
 <p align="center">
-  <img src="assets/v4/player3.svg" width="100%" alt="now playing" />
+  <img src="https://now-playing.dimachernenko404.workers.dev/" width="100%" alt="now playing" />
 </p>
